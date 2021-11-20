@@ -9,7 +9,7 @@
 - сотни (в свойстве thirdDigit)
 Если число было передано вне [0, 999] диапазона, не целое число или вообще не число,
 необходимо выдать соответствующее сообщение с помощью console.log и вернуть пустой объект.*/
-/*console.log('Задание 1');
+console.log('Задание 1');
 
 let num = prompt('Введите целое число от 0 до 999');
 let firstDigit = 0;
@@ -39,7 +39,7 @@ const obj = {
   secondDigit,
   thirdDigit,
 }
-console.log(obj);*/
+console.log(obj);
 
 /* Задание 2*. Для игры, реализованной на уроке (бродилка), добавить возможность ходить по диагонали
 цифрами 1, 3, 7, 9
@@ -54,126 +54,105 @@ colsCount: 10,
 startPositionX: 0,
 startPositionY: 0,
 };
-const nextPositionX = 0;
-const nextPositionY = 0;
-// Объект игрока, здесь будут все методы и свойства связанные с ним.
-const player = {
-x: null,
-y: null,
-//Инициализация игрока и его метоположения.
-init(startX, startY) {
- this.x = startX;
- this.y = startY;
+
+const player = {  // Объект игрока, здесь будут все методы и свойства связанные с ним.
+  x: 0,
+  y: 0,
+  init(startX, startY) {  //Инициализация игрока и его метоположения.
+     this.x = startX;
+     this.y = startY;
+  },
+};
+
+let previousX = 0; //записываем положение игрока игрока
+let previousY = 0;
+
+const game = {      // Объект игры, здесь будут все методы и свойства связанные с самой игрой в общем.
+   settings,
+   player,
+   
+   run() {   //Запускает игру.
+    this.player.init(this.settings.startPositionX, this.settings.startPositionY);  //ставим игрока в начальное местоположение
+    while (true) {
+      this.render(); // Отображаем нашу игру
+      previousX = this.player.x; // фиксируем позицию игрока в данном ходе. Если в след.ход он упрется в стену - вернем его на эту точку
+      previousY = this.player.y;
+      const direction = this.getDirection(); // Получаем направление от игрока.
+      this.getNextPosition(direction); //запускае проверку хода и расчет новой точки
+      
+      if (direction === -1) {  // Если игрок сказал что хочет выйти (набрал -1), значит выходим.
+         alert('До свидания.');
+         return;
+       }
+    };
 },
-getNextPosition(direction) {
-  nextPositionX = this.x;
-  nextPositionY = this.y;
+
+render() {    // Отображает игру в консоли.
+  let map = "";
+  for (let row = 0; row < this.settings.rowsCount; row++) {  // Цикл перебирает все строки, которые надо отобразить.
+       for (let col = 0; col < this.settings.colsCount; col++) {// В каждой строке отображаем для каждой колонки (x - клетка, o - игрок).
+          if (this.player.y === row && this.player.x === col) {
+             map += 'o ';
+          } else {  // Проверяем, если на данной позиции должен быть и игрок, отображаем игрока, если нет - клетку.
+             map += 'x ';
+          };
+        };
+      map += '\n'; // После того как отобразили всю строку делаем переход на следующую строку.
+    }
+     console.clear();
+     console.log(map);
+},
+
+getDirection() { // Получает и отдает направление от пользователя.
+ const availableDirections = [-1, 2, 4, 6, 8, 1, 3, 7, 9]; // Доступные значения ввода.
+ while (true) {  // Получаем от пользователя направление.
+    const direction = parseInt(prompt('Введите число, куда вы хотите переместиться, -1 для выхода.'));
+    if (!availableDirections.includes(direction)) { // Если направление не одно из доступных, то сообщаем что надо ввести корректные данные
+       alert(`Для перемещения необходимо ввести одно из чисел: ${availableDirections.join(', ')}.`);
+       continue;
+    };
+   return direction; // Если пользователь ввел корректное значение - отдаем его.
+ };
+},
+
+getNextPosition(direction) { //расчитываем следующее положение игрока
   switch (direction) {
     case 1:
-       nextPositionX--;
-       nextPositionY++;
-       break; 
+     this.player.x--;
+     this.player.y++;
+     break; 
     case 2:
-       nextPositionY++;
-       break;
+     this.player.y++;
+     break;
     case 3:
-       nextPositionX++;
-       nextPositionY++;
-       break; 
-     case 4:
-       nextPositionX--;
-       break;
-     case 6:
-       nextPositionX++;
-       break;
-      case 7:
-        nextPositionX--;
-        nextPositionY--;
-        break;   
-     case 8:
-       nextPositionY--;
-       break;
+     this.player.x++;
+     this.player.y++;
+     break; 
+    case 4:
+     this.player.x--;
+     break;
+    case 6:
+     this.player.x++;
+     break;
+    case 7:
+      this.player.x--;
+      this.player.y--;
+      break;   
+    case 8:
+     this.player.y--;
+     break;
     case 9:
-        nextPositionX++;
-        nextPositionY--;
-        break;  
-   }
-   console.log(nextPositionY);
-   console.log(nextPositionX);
-   if (nextPositionX < 0 || nextPositionY < 0 || nextPositionY > 10 || nextPositionX > 10) {
-     nextPositionX = this.x;
-     nextPositionY = this.y;
-     alert('Вы уперлись в стену. Выбирайте другое направление');
-   }   
-},
-//Двигает игрока по переданному направлению.
-move(nextPositionX, nextPositionY) {
-this.x = nextPositionX;
-this.y = nextPositionY;
-},
-}
-
-// Объект игры, здесь будут все методы и свойства связанные с самой игрой в общем.
-const game = {
-settings,
-player,
-//Запускает игру.
-run() {
- // Инициализируем игрока, ставим его начальное местоположение
- this.player.init(this.settings.startPositionX, this.settings.startPositionY);
- // Бесконечный цикл
- while (true) {
-   // Отображаем нашу игру.
-   this.render();
-   // Получаем направление от игрока.
-   const direction = this.getDirection();
-   // Если игрок сказал что хочет выйти (набрал -1), значит выходим.
-   if (direction === -1) {
-     alert('До свидания.');
-     return;
-   }
-   // Двигаем игрока.
-   this.player.move(direction);
- }
-},
-
-// Отображает игру в консоли.
-render() {
-  let map = "";
- // Цикл перебирает все строки, которые надо отобразить.
- for (let row = 0; row < this.settings.rowsCount; row++) {
-   // В каждой строке отображаем для каждой колонки (x - клетка, o - игрок).
-   for (let col = 0; col < this.settings.colsCount; col++) {
-     // Проверяем, если на данной позиции должен быть и игрок, отображаем игрока, если нет - клетку.
-     if (this.player.y === row && this.player.x === col) {
-       map += 'o ';
-     } else {
-       map += 'x ';
-     }
-   }
-   // После того как отобразили всю строку делаем переход на следующую строку.
-   map += '\n';
- }
-  console.clear();
-  console.log(map);
-},
-
-// Получает и отдает направление от пользователя.
-getDirection() {
- // Доступные значения ввода.
- const availableDirections = [-1, 2, 4, 6, 8, 1, 3, 7, 9];
- while (true) {
-   // Получаем от пользователя направление.
-   const direction = parseInt(prompt('Введите число, куда вы хотите переместиться, -1 для выхода.'));
-   // Если направление не одно из доступных, то сообщаем что надо ввести корректные данные
-   // и начинаем новую итерацию.
-   if (!availableDirections.includes(direction)) {
-     alert(`Для перемещения необходимо ввести одно из чисел: ${availableDirections.join(', ')}.`);
-     continue;
-   }
-   // Если пользователь ввел корректное значение - отдаем его.
-   return direction;
- }
+      this.player.x++;
+      this.player.y--;
+      break;  
+    };
+ 
+  // проверяем не упирается ли игрок в стену
+  if (this.player.x < 0 || this.player.y < 0 || this.player.y > 9 || this.player.x > 9) {
+    this.player.x = previousX; //если уперся в стену - отменяем текущий ход
+    this.player.y = previousY;
+   alert('Вы уперлись в стену. Выбирайте другое направление');
+   };
 },
 };
 
@@ -188,7 +167,7 @@ game.run();
 пользователь или нет, необходимо вести счет. По окончании игры, когда было задано 5 вопросов, вы должны 
 сообщить пользователю его счет и предложить сыграть снова. Также должна быть возможность выхода из игры 
 заранее, если пользователю надоело играть.*/
-/*console.log('Задание 3');
+console.log('Задание 3');
 
 const question = [{
     quest: 'Загадка 1\nВарианты ответов:\n1 - верно,\n 2 - не верно,\n 3 - не верно,\n 4 - не верно.\n-1 - для выхода. ',
@@ -258,4 +237,4 @@ const newGame = {
   };
 
 newGame.run();//запуск игры
-*/
+
