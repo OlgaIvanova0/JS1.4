@@ -15,24 +15,28 @@ let num = prompt('Введите целое число от 0 до 999');
 let firstDigit = 0;
 let secondDigit = 0;
 let thirdDigit = 0;
-const getNumber = num =>{
-   if(!Number.isInteger(+ num) || num < 0 || num > 999){
-     alert('Число введено не верно! Попробуйте еще раз.');
-   }
-};
-getNumber(num);
 
-const readNumber = num =>{
-  firstDigit = + num[num.length - 1];
-  secondDigit = + num[num.length - 2];
-  thirdDigit = + num[num.length - 3];
-  if (num.length < 2) {
-    return secondDigit = 0;
-  } else if (num.length < 3) {
-    return thirdDigit = 0;
-  }
+const convertNumberToObject = num =>{
+  const getNumber = num =>{
+    if(!Number.isInteger(+ num) || num < 0 || num > 999){
+       alert('Число введено не верно! Попробуйте еще раз.');
+    }
+  };
+  getNumber(num);
+
+  const readNumber = num =>{
+    firstDigit = + num[num.length - 1];
+    secondDigit = + num[num.length - 2];
+    thirdDigit = + num[num.length - 3];
+    if (num.length < 2) {
+      return secondDigit = 0;
+    } else if (num.length < 3) {
+      return thirdDigit = 0;
+    }
+  };
+  readNumber(num);
 };
-readNumber(num);
+convertNumberToObject(num);
 
 const obj = {
   firstDigit,
