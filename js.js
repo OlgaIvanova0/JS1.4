@@ -12,38 +12,31 @@
 console.log('Задание 1');
 
 let num = prompt('Введите целое число от 0 до 999');
-let firstDigit = 0;
-let secondDigit = 0;
-let thirdDigit = 0;
 
 const convertNumberToObject = num =>{
-  const getNumber = num =>{
-    if(!Number.isInteger(+ num) || num < 0 || num > 999){
-       alert('Число введено не верно! Попробуйте еще раз.');
-    }
+  if(!Number.isInteger(+ num) || num < 0 || num > 999){ //если введено неверное число или не число
+    alert('Число введено не верно! Попробуйте еще раз.');
   };
-  getNumber(num);
 
-  const readNumber = num =>{
-    firstDigit = + num[num.length - 1];
-    secondDigit = + num[num.length - 2];
-    thirdDigit = + num[num.length - 3];
-    if (num.length < 2) {
-      return secondDigit = 0;
-    } else if (num.length < 3) {
-      return thirdDigit = 0;
-    }
+  const obj = { //создаем пустой объект
+    firstDigit: 0,
+    secondDigit: 0,
+    thirdDigit: 0,
   };
-  readNumber(num);
+
+  obj.firstDigit = + num[num.length - 1]; //разбиваем число и записываем результат в объект
+  obj.secondDigit = + num[num.length - 2];
+  obj.thirdDigit = + num[num.length - 3];
+  
+  if (num.length < 2) { //если в числе нет десятков или сотен - возвращаем в объект 0
+    obj.secondDigit = 0;
+  } else if (num.length < 3) {
+    obj.thirdDigit = 0;
+  };
+  console.log(obj);
 };
-convertNumberToObject(num);
 
-const obj = {
-  firstDigit,
-  secondDigit,
-  thirdDigit,
-}
-console.log(obj);
+convertNumberToObject(num);
 
 /* Задание 2*. Для игры, реализованной на уроке (бродилка), добавить возможность ходить по диагонали
 цифрами 1, 3, 7, 9
@@ -198,7 +191,7 @@ const question = [{
 const newGame = {
   question,
   availableAnswer: ['1', '2', '3', '4'],//возможные варианты ответа
-  newRightAnswer: [],//все правильные ответы
+  newRightAnswer:[],//все правильные ответы
   playerAnswer:[],//ответы игрока
   playerCount: 0,//количество правильных ответов
   
@@ -208,6 +201,9 @@ const newGame = {
     console.log(this.playerAnswer);
     this.getPlayerCount();//находим правильные ответы
     alert(`Поздравляем! Количество правильных ответов: ${this.playerCount} из 5`);
+    this.playerCount = 0; //обнуляем счет
+    delete this.newRightAnswer; //удаляем все правильные ответы
+    delete this.newRightAnswer; //удаляем ответы игрока
   },
   getAnser() { //получаем ответы игрока
      for (let i = 0; i < question.length; i++) {
@@ -238,7 +234,23 @@ const newGame = {
        this.newRightAnswer.push(this.question[k].rightAnswer);
       };
     },
+    
   };
 
 newGame.run();//запуск игры
+
+const repeatGame = () =>{ //предлагаем сыграть заново
+  while (true) {
+    const repeat = prompt('Нажмите 1 если хотите сыграть еще раз? Для выхода нажмите "-1"');
+    if(repeat === '1'){
+      newGame.newRightAnswer = []; //заново создаем массивы для записы ответов
+      newGame.playerAnswer = [];
+      newGame.run();
+    } else {
+      return alert('До свидания!');
+    };
+  };
+};
+
+repeatGame();
 
