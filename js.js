@@ -11,32 +11,25 @@
 необходимо выдать соответствующее сообщение с помощью console.log и вернуть пустой объект.*/
 console.log('Задание 1');
 
-let num = prompt('Введите целое число от 0 до 999');
+let num = + prompt('Введите целое число от 0 до 999');
 
 const convertNumberToObject = num =>{
-  if(!Number.isInteger(+ num) || num < 0 || num > 999){ //если введено неверное число или не число
+  if(!Number.isInteger(num) || num < 0 || num > 999){ //если введено неверное число или не число
     alert('Число введено не верно! Попробуйте еще раз.');
+    const obj = {};
+    return obj;
+    } else {
+    const obj = {
+       thirdDigit: (num - num % 100) / 100,
+       secondDigit: (num % 100 - num % 10) / 10,
+       firstDigit: num % 10, 
+    };
+    return obj;
   };
-
-  const obj = { //создаем пустой объект
-    firstDigit: 0,
-    secondDigit: 0,
-    thirdDigit: 0,
-  };
-
-  obj.firstDigit = + num[num.length - 1]; //разбиваем число и записываем результат в объект
-  obj.secondDigit = + num[num.length - 2];
-  obj.thirdDigit = + num[num.length - 3];
-  
-  if (num.length < 2) { //если в числе нет десятков или сотен - возвращаем в объект 0
-    obj.secondDigit = 0;
-  } else if (num.length < 3) {
-    obj.thirdDigit = 0;
-  };
-  console.log(obj);
 };
 
-convertNumberToObject(num);
+console.log(convertNumberToObject(num));
+
 
 /* Задание 2*. Для игры, реализованной на уроке (бродилка), добавить возможность ходить по диагонали
 цифрами 1, 3, 7, 9
@@ -164,7 +157,7 @@ game.run();*/
 пользователь или нет, необходимо вести счет. По окончании игры, когда было задано 5 вопросов, вы должны 
 сообщить пользователю его счет и предложить сыграть снова. Также должна быть возможность выхода из игры 
 заранее, если пользователю надоело играть.*/
-console.log('Задание 3');
+/*console.log('Задание 3');
 
 const question = [{
     quest: 'Загадка 1\nВарианты ответов:\n1 - верно,\n 2 - не верно,\n 3 - не верно,\n 4 - не верно.\n-1 - для выхода. ',
@@ -250,7 +243,8 @@ const repeatGame = () =>{ //предлагаем сыграть заново
       return alert('До свидания!');
     };
   };
+
 };
 
 repeatGame();
-
+*/
